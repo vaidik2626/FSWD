@@ -1,36 +1,44 @@
-const http = require('http');
-
-const port = 3000;
+const http = require("http");
+const qs = require("querystring");
 
 const server = http.createServer((req, res) => {
-  if (req.method === 'POST' && req.url === '/sum') {
-    let body = '';
+  if (req.method === "GET") {
+    res.end("welcome to server");
+  }
 
-    req.on('data', chunk => {
+  if (req.method === "POST") {
+    let body = "";
+
+    req.on("data", (chunk) => {
       body += chunk.toString();
     });
 
-    req.on('end', () => {
-      const { num1, num2 } = JSON.parse(body);
+    req.on("end", () => {
+      const formData = qs.parse(body);
+      const number1 = Number(formData.number1);
+      const number2 = Number(formData.number2);
 
-      // Check if the inputs are valid numbers
-      if (isNaN(num1) || isNaN(num2)) {
+      if (isNaN(number1) || isNaN(number2)) {
         res.statusCode = 400;
-        res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify({ error: 'Invalid input. Please provide valid numbers.' }));
-      } else {
-        const sum = parseFloat(num1) + parseFloat(num2);
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify({ sum }));
+        res.setHeader("Content-Type", "text/plain");
+        res.end("Invalid number1 or number2 parameter");
+        return;
       }
+
+      const sum = number1 + number2;
+
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "text/plain");
+      res.end(`Sum: ${sum}`);
     });
   } else {
     res.statusCode = 404;
-    res.end('Not Found');
+    res.setHeader("Content-Type", "text/plain");
+    res.end("Endpoint not found");
   }
 });
 
-server.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+server.listen(3000, () => {
+  console.log("Server listening on port 3000");
 });
+server.js
