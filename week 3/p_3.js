@@ -1,13 +1,8 @@
-
 const chalk = require('chalk');
-const upperCase = require('upper-case');
+console.log(chalk.blue('This text will be displayed in blue!'));
+console.log(chalk.bold.green('This text will be displayed in bold green!'));
+console.log(chalk.bgYellow.black('This text will have a yellow background with black text!'));
 
-const message = 'hello, chalk and upper-case modules!';
-console.log(chalk.blue('Hello world!'));
-// Convert the message to uppercase using upper-case module
-const upperCaseMessage = upperCase(message);
-
-// Apply colored formatting using chalk
-const formattedMessage = chalk.bold.green(upperCaseMessage);
-
-console.log(formattedMessage);
+const text = 'hello, world!';
+const uppercasedText = text.toUpperCase();
+console.log(uppercasedText); 

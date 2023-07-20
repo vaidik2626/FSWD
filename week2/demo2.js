@@ -1,31 +1,30 @@
 const fs = require('fs');
 
-// Read the file asynchronously
-fs.readFile('sample.txt', (err, data) => {
-  if (err) {
-    console.error('Error reading the file:', err);
-    return;
-  }
-
-  // Split the file contents into an array of lines
-  const lines = data.split('\n');
-
-  // Array to store the matching students
-  const matchingStudents = [];
-
-  // Iterate over each line and check for the required conditions
-  lines.forEach(line => {
-    const [name, cgpa] = line.split(',');
-
-    // Check if the name contains 'MA' and CGPA > 7
-    if (name.includes('MA') && parseFloat(cgpa) > 7) {
-      matchingStudents.push({ name, cgpa });
+function findStudentsWithMAAndCGPA(filePath, searchString, minCGPA) {
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Error reading file:', err.message);
+      return;
     }
-  });
 
-  // Print the matching students
-  console.log('Matching students:');
-  matchingStudents.forEach(student => {
-    console.log(`Name: ${student.name}, CGPA: ${student.cgpa}`);
+    const lines = data.split('\n');
+    const students = [];
+
+    for (const line of lines) {
+      const [name, course, cgpa] = line.split(' ');
+
+      if (name.toUpperCase().includes(searchString.toUpperCase()) && parseFloat(cgpa) > minCGPA) {
+        students.push({ name, course, cgpa });
+      }
+    }
+
+    console.log('Students whose name contains "MA" and CGPA >', minCGPA);
+    console.log(students);
   });
-});
+}
+
+const filePath = 'sample.txt';
+const searchString = 'MA';
+const minCGPA = 7.0;
+
+findStudentsWithMAAndCGPA(filePath, searchString, minCGPA);
